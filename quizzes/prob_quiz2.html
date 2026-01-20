@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Quiz 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .option-btn { margin-bottom: 10px; width: 100%; text-align: left; }
+        #result-container { display: none; }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 p-4">
+                <h2 class="text-center mb-4 text-primary">Probability 1 - Quiz 2</h2>
+                
+                <div id="quiz-body">
+                    <h5 id="question-text" class="mb-4">Loading Question...</h5>
+                    <div id="options-container" class="d-grid gap-2">
+                        </div>
+                    <div class="mt-4 d-flex justify-content-between">
+                        <span class="badge bg-secondary p-2">Question: <span id="current-q">1</span>/5</span>
+                        <button id="next-btn" class="btn btn-dark" disabled onclick="nextQuestion()">Next</button>
+                    </div>
+                </div>
+
+                <div id="result-container" class="text-center">
+                    <h3 class="mb-3">Quiz Completed! 🎉</h3>
+                    <p class="fs-4">Your Score: <span id="score" class="fw-bold text-success">0</span> / 5</p>
+                    <button class="btn btn-primary" onclick="location.reload()">Try Again</button>
+                    <a href="prob_quizzes.html" class="btn btn-outline-secondary ms-2">Back to Quizzes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        { q: "If a fair coin is tossed, what is the probability of getting 'Heads'?", a: ["0", "0.5", "1", "0.25"], correct: 1 },
+        { q: "The probability of an impossible event is:", a: ["1", "0.5", "-1", "0"], correct: 3 },
+        { q: "A dice is rolled. What is the probability of getting an even number?", a: ["1/6", "1/2", "1/3", "2/3"], correct: 1 },
+        { q: "The sum of all probabilities in a sample space is always:", a: ["0", "Infinity", "1", "100"], correct: 2 },
+        { q: "P(A) + P(not A) is equal to:", a: ["0", "0.5", "1", "Depends on A"], correct: 2 }
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        const q = quizData[currentIdx];
+        document.getElementById('question-text').innerText = q.q;
+        document.getElementById('current-q').innerText = currentIdx + 1;
+        const container = document.getElementById('options-container');
+        container.innerHTML = "";
+        
+        q.a.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = "btn btn-outline-dark option-btn";
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(i, btn);
+            container.appendChild(btn);
+        });
+        document.getElementById('next-btn').disabled = true;
+    }
+
+    function checkAnswer(selected, btn) {
+        const correct = quizData[currentIdx].correct;
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        if (selected === correct) {
+            score++;
+            btn.className = "btn btn-success option-btn text-white";
+        } else {
+            btn.className = "btn btn-danger option-btn text-white";
+            allBtns[correct].className = "btn btn-success option-btn text-white";
+        }
+        document.getElementById('next-btn').disabled = false;
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < quizData.length) {
+            loadQuestion();
+        } else {
+            document.getElementById('quiz-body').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('score').innerText = score;
+        }
+    }
+
+    loadQuestion();
+</script>
+
+<script src="../main.js"></script>
+</body>
+</html>

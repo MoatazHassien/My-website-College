@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures - Quiz 1</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .quiz-container { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 700px; width: 100%; }
+        .question { display: none; }
+        .question.active { display: block; }
+        .option-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #ecf0f1; border-radius: 10px; background: #fff; cursor: pointer; text-align: left; }
+        .correct { background-color: #2ecc71 !important; color: white; }
+        .wrong { background-color: #e74c3c !important; color: white; }
+        .explanation { margin-top: 20px; padding: 15px; background: #e8f4fd; border-left: 5px solid #3498db; display: none; }
+        #next-btn { margin-top: 20px; width: 100%; padding: 15px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; display: none; }
+        .back-link { margin-bottom: 20px; text-decoration: none; color: #3498db; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<a href="../ds/ds_quizzes.html" class="back-link">⬅ back</a>
+
+<div class="quiz-container">
+    <h1>Data Structures - Quiz 1</h1>
+    <div id="quiz-area"></div>
+    <button id="next-btn" onclick="nextQuestion()">Next Question ➡</button>
+
+    <div id="result-container" style="display:none; text-align: center;">
+        <h2>Quiz Completed!</h2>
+        <div style="font-size: 48px; color: #2ecc71;" id="score-text"></div>
+        <button onclick="location.reload()" style="padding: 10px 20px; margin-top: 20px;">Restart Quiz</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        { q: "What is the primary language used in this course for implementing data structures?", a: "Java", opts: ["Python", "C++", "Java", "JavaScript"], exp: "ورد في الصفحة 5 أن لغة Java هي المستخدمة." },
+        { q: "What is the first step when faced with a real-world problem in programming?", a: "Understand the problem by separating necessary from unnecessary details", opts: ["Start coding immediately", "Understand the problem by separating necessary from unnecessary details", "Choose a programming language", "Define the data structure"], exp: "الصفحة 6 تشير إلى أن أول خطوة هي فهم المشكلة." }
+        // ... يمكنك إضافة باقي الأسئلة هنا بنفس التنسيق
+    ];
+
+    let currentIdx = 0;
+    let score = 0;
+
+    function initQuiz() {
+        const area = document.getElementById('quiz-area');
+        quizData.forEach((item, i) => {
+            const div = document.createElement('div');
+            div.className = `question ${i === 0 ? 'active' : ''}`;
+            div.id = `q-${i}`;
+            div.innerHTML = `
+                <p><strong>Question ${i+1}:</strong> ${item.q}</p>
+                ${item.opts.map(o => `<button class="option-btn" onclick="checkAnswer(this, '${o}', '${item.a}', ${i})">${o}</button>`).join('')}
+                <div class="explanation" id="exp-${i}"><strong>Explanation:</strong> ${item.exp}</div>
+            `;
+            area.appendChild(div);
+        });
+    }
+
+    function checkAnswer(btn, selected, correct, i) {
+        const currentQ = document.getElementById(`q-${i}`);
+        const allBtns = currentQ.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.disabled = true);
+        if (selected === correct) {
+            btn.classList.add('correct');
+            score++;
+        } else {
+            btn.classList.add('wrong');
+            allBtns.forEach(b => { if(b.innerText === correct) b.classList.add('correct'); });
+        }
+        document.getElementById(`exp-${i}`).style.display = 'block';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        document.getElementById(`q-${currentIdx}`).classList.remove('active');
+        document.getElementById('next-btn').style.display = 'none';
+        currentIdx++;
+        if (currentIdx < quizData.length) {
+            document.getElementById(`q-${currentIdx}`).classList.add('active');
+        } else {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+            document.getElementById('score-text').innerText = `${score} / ${quizData.length}`;
+        }
+    }
+    initQuiz();
+</script>
+</body>
+</html>
