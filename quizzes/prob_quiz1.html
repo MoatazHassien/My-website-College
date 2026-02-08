@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Probability Quiz - Eng/ Moataz Hassien</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- إضافة مكتبة MathJax لدعم المعادلات الرياضية -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f0f4f8;
+        }
+
+        .option-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .option-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background-color: #ffffff;
+            border-color: #e5e7eb;
+        }
+
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+        }
+
+        .wrong {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+
+        .feedback-box {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <!-- Header -->
+        <div class="bg-indigo-600 p-6 text-white text-center relative">
+            <svg class="absolute left-4 top-4 opacity-20" width="80" height="80" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="5" stroke-dasharray="10 5"/>
+                <path d="M30 50 L70 50 M50 30 L50 70" stroke="white" stroke-width="5" />
+            </svg>
+            <h1 class="text-2xl md:text-3xl font-bold">quiz 1</h1>
+            <p class="mt-2 opacity-90 font-medium">By: Eng/ Moataz Hassien</p>
+            <div id="progress" class="mt-4 inline-block bg-indigo-500 px-4 py-1 rounded-full text-sm">سؤال 1 من 10</div>
+        </div>
+
+        <!-- Quiz Content -->
+        <div id="quiz-content" class="p-6 md:p-10">
+            <div id="question-text" class="text-xl md:text-2xl font-bold text-gray-800 mb-8 leading-relaxed"></div>
+            
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left" dir="ltr">
+                <!-- Options injected here -->
+            </div>
+
+            <!-- Feedback Area -->
+            <div id="feedback" class="feedback-box mt-8 p-6 rounded-2xl border-2">
+                <div class="flex items-center mb-3">
+                    <span id="feedback-icon" class="ml-3 text-2xl"></span>
+                    <h3 id="feedback-title" class="font-bold text-xl"></h3>
+                </div>
+                <div id="feedback-text" class="text-gray-700 leading-relaxed text-lg mb-4"></div>
+                <button id="next-btn" class="w-full md:w-auto bg-indigo-600 text-white px-10 py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors shadow-lg">
+                    السؤال التالي
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden p-12 text-center">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 text-green-600 rounded-full mb-6">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">ممتاز! انتهيت من الاختبار</h2>
+            <p id="final-score" class="text-2xl text-indigo-600 mb-8 font-bold"></p>
+            <button onclick="location.reload()" class="bg-gray-800 text-white px-10 py-4 rounded-2xl font-bold hover:bg-black transition transform hover:scale-105">إعادة المحاولة</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                q: "If a fair coin is tossed 3 times, what is the total number of outcomes in the sample space $S$?",
+                options: ["6", "8", "9", "4"],
+                correct: 1,
+                explanation: "<b>الخطوات:</b> بما أن العملة لها وجهان $(H, T)$، فإن عدد الأوجه $m=2$. وبما أننا رميناها $n=3$ مرات، فإن القانون هو $m^n$. <br> $$2^3 = 2 \\times 2 \\times 2 = 8$$<br> الاختيار 6 غلط لأنه ضرب 2 في 3 بدلاً من الأسس."
+            },
+            {
+                q: "Two events $A$ and $B$ are 'Mutually Exclusive' (disjoint) if their intersection is:",
+                options: ["$A \\cap B = S$", "$A \\cap B = \\phi$", "$A \\cup B = \\phi$", "$P(A) + P(B) = 1$"],
+                correct: 1,
+                explanation: "<b>الشرح:</b> الأحداث المتنافية (Disjoint) هي الأحداث التي لا يمكن أن تقع معاً في نفس الوقت، لذلك تقاطعها دائماً يساوي المجموعة الخالية $\\phi$."
+            },
+            {
+                q: "If a fair die is rolled once, what is the probability of getting an even number?",
+                options: ["1/6", "1/2", "2/3", "1/3"],
+                correct: 1,
+                explanation: "<b>الخطوات:</b> فضاء العينة للنرد هو $\\{1,2,3,4,5,6\\}$ وعددهم 6. الأعداد الزوجية هي $\\{2,4,6\\}$ وعددهم 3. <br> الاحتمال = عدد عناصر الحدث / العدد الكلي = $\\frac{3}{6} = \\frac{1}{2}$."
+            },
+            {
+                q: "If $P(A) = 0.7$, calculate the probability of the complement event $P(\\bar{A})$",
+                options: ["0.7", "0.3", "1.0", "0.0"],
+                correct: 1,
+                explanation: "<b>الخطوات:</b> مجموع احتمال الحدث ومكمله يساوي دائماً 1. <br> $P(\\bar{A}) = 1 - P(A)$ <br> $$1 - 0.7 = 0.3$$"
+            },
+            {
+                q: "In rolling two dice simultaneously, the size of the sample space $n(S)$ is:",
+                options: ["12", "36", "24", "6"],
+                correct: 1,
+                explanation: "<b>الخطوات:</b> كل نرد له 6 أوجه. عند رمي نردين نستخدم قاعدة الضرب: $6 \\times 6 = 36$ أو $6^2 = 36$."
+            },
+            {
+                q: "An event that is impossible to occur has a probability of:",
+                options: ["1", "0", "-1", "0.5"],
+                correct: 1,
+                explanation: "<b>الشرح:</b> الاحتمال دائماً يقع في الفترة $[0, 1]$. الصفر يعني مستحيل الوقوع (Impossible)، والـ 1 يعني مؤكد الوقوع (Certain)."
+            },
+            {
+                q: "If $A$ and $B$ are disjoint, $P(A)=0.4$ and $P(B)=0.5$, then $P(A \\cap B)$ is:",
+                options: ["0.9", "0.2", "0.0", "0.1"],
+                correct: 2,
+                explanation: "<b>الخطوات:</b> بما أن الحدثين disjoint (متنافيان)، فهذا يعني استحالة وقوعهما معاً، أي أن التقاطع $\\cap$ احتماله صفر دائماً."
+            },
+            {
+                q: "If $S = \\{1, 2, 3, 4, 5, 6\\}$ and $A = \\{2, 4, 6\\}$, find the elements of $\\bar{A}$ (complement of A):",
+                options: ["{1, 3, 5}", "{2, 4, 6}", "{1, 2, 3, 4, 5, 6}", "{ }"],
+                correct: 0,
+                explanation: "<b>الشرح:</b> المكملة (Complement) هي كل العناصر الموجودة في $S$ وغير موجودة في $A$. بما أن $A$ هي الأعداد الزوجية، فالمكملة هي الأعداد الفردية $\\{1,3,5\\}$."
+            },
+            {
+                q: "If $A$ and $B$ are mutually exclusive, $P(A)=0.3$ and $P(B)=0.4$, find $P(A \\cup B)$:",
+                options: ["0.1", "0.12", "0.7", "1.0"],
+                correct: 2,
+                explanation: "<b>الخطوات:</b> في حالة الأحداث المتنافية، قانون الاتحاد هو الجمع البسيط: <br> $P(A \\cup B) = P(A) + P(B)$ <br> $$0.3 + 0.4 = 0.7$$"
+            },
+            {
+                q: "Tossing a coin until the first Head appears results in a sample space that is:",
+                options: ["Finite", "Infinite", "Empty", "Impossible"],
+                correct: 1,
+                explanation: "<b>الشرح:</b> كما هو مذكور في المذكرات، قد يستمر ظهور الكتابة ($T$) لعدد غير محدود من المرات قبل ظهور أول ($H$)، لذا فضاء العينة $\\{H, TH, TTH, \\dots\\}$ يعتبر غير منتهٍ (Infinite)."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackBox = document.getElementById('feedback');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackText = document.getElementById('feedback-text');
+        const progressText = document.getElementById('progress');
+        const nextBtn = document.getElementById('next-btn');
+
+        // دالة آمنة لتنسيق المعادلات
+        function renderMath() {
+            if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+                MathJax.typesetPromise().catch(err => console.log('MathJax Error:', err));
+            }
+        }
+
+        function loadQuestion() {
+            answered = false;
+            feedbackBox.style.display = 'none';
+            const q = quizData[currentQuestion];
+            questionText.innerHTML = q.q;
+            progressText.innerText = `سؤال ${currentQuestion + 1} من ${quizData.length}`;
+            
+            optionsContainer.innerHTML = '';
+            q.options.forEach((opt, index) => {
+                const div = document.createElement('div');
+                div.className = 'option-card bg-gray-50 p-5 rounded-xl border-2 border-gray-100 text-lg font-medium';
+                div.innerHTML = opt;
+                div.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(div);
+            });
+
+            // تنسيق الرموز بعد التحميل
+            renderMath();
+        }
+
+        function checkAnswer(index) {
+            if (answered) return;
+            answered = true;
+            
+            const q = quizData[currentQuestion];
+            const options = optionsContainer.children;
+            
+            if (index === q.correct) {
+                score++;
+                options[index].classList.add('correct');
+                feedbackBox.className = 'feedback-box mt-8 p-6 rounded-2xl border-2 border-green-200 bg-green-50';
+                feedbackIcon.innerText = "✅";
+                feedbackTitle.innerText = "إجابة صحيحة! برافو";
+                feedbackTitle.className = "font-bold text-xl text-green-700";
+            } else {
+                options[index].classList.add('wrong');
+                options[q.correct].classList.add('correct');
+                feedbackBox.className = 'feedback-box mt-8 p-6 rounded-2xl border-2 border-red-200 bg-red-50';
+                feedbackIcon.innerText = "❌";
+                feedbackTitle.innerText = "إجابة خاطئة";
+                feedbackTitle.className = "font-bold text-xl text-red-700";
+            }
+
+            feedbackText.innerHTML = q.explanation;
+            feedbackBox.style.display = 'block';
+
+            // تنسيق الرموز في الشرح
+            renderMath();
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('quiz-content').classList.add('hidden');
+            const resScreen = document.getElementById('result-screen');
+            resScreen.classList.remove('hidden');
+            document.getElementById('final-score').innerText = `درجتك النهائية: ${score} من ${quizData.length}`;
+        }
+
+        // تشغيل الكويز بعد التأكد من تحميل الصفحة
+        window.addEventListener('load', () => {
+            loadQuestion();
+        });
+    </script>
+</body>
+</html>
